@@ -1,0 +1,70 @@
+﻿@{
+    Layout = null;
+}
+
+<style>
+    body {
+        background: url('/images/fortune_orb_1050x700.jpg');
+        background-size: cover;
+        background-position: center;
+        font-family: Arial;
+    }
+
+    .card {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        width: 600px;
+        margin: auto;
+        margin-top: 120px;
+        text-align: center;
+        box-shadow: 0 0 30px rgba(0,0,0,0.4);
+    }
+
+    .btn {
+        display: block;
+        margin: 10px;
+        padding: 15px;
+        font-size: 18px;
+        transition: 0.3s;
+        border: none;
+        border-radius: 10px;
+    }
+
+        .btn:hover {
+            transform: scale(1.05);
+            background: #4da6ff;
+            color: white;
+        }
+
+    .progress {
+        height: 20px;
+        background: #ddd;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: #4da6ff;
+        width: @ViewBag.Progress %;
+        border-radius: 10px;
+    }
+</style>
+
+<div class="card">
+
+    <div class="progress">
+        <div class="progress-bar"></div>
+    </div>
+
+    <h2>@ViewBag.Question</h2>
+
+    <form method="post" asp-action="Answer">
+        <button name="value" value="1" class="btn">Deloc</button>
+        <button name="value" value="2" class="btn">Puțin</button>
+        <button name="value" value="3" class="btn">De acord</button>
+        <button name="value" value="4" class="btn">Foarte de acord</button>
+    </form>
+
+</div>

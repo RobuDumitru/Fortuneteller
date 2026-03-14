@@ -1,0 +1,30 @@
+﻿@model Dictionary<string,int>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div style="width:600px;margin:auto;margin-top:100px">
+    <canvas id="radar"></canvas>
+</div>
+
+<script>
+    var data = {
+    labels: ['Extraversion','Openness','Conscientiousness','Agreeableness','Neuroticism'],
+    datasets: [{
+    label: 'Personalitate',
+    data: [
+    @Model["Extraversion"],
+    @Model["Openness"],
+    @Model["Conscientiousness"],
+    @Model["Agreeableness"],
+    @Model["Neuroticism"]
+    ],
+    backgroundColor:'rgba(54,162,235,0.3)',
+    borderColor:'blue'
+    }]
+    };
+
+    new Chart(document.getElementById('radar'),{
+    type:'radar',
+    data:data
+    });
+</script>
