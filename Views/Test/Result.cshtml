@@ -1,30 +1,300 @@
 ﻿@model Dictionary<string,int>
+@{
+    Layout = null;
+    var best = Model.OrderByDescending(x => x.Value).First().Key;
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<div style="width:600px;margin:auto;margin-top:100px">
-    <canvas id="radar"></canvas>
-</div>
-
-<script>
-    var data = {
-    labels: ['Extraversion','Openness','Conscientiousness','Agreeableness','Neuroticism'],
-    datasets: [{
-    label: 'Personalitate',
-    data: [
-    @Model["Extraversion"],
-    @Model["Openness"],
-    @Model["Conscientiousness"],
-    @Model["Agreeableness"],
-    @Model["Neuroticism"]
-    ],
-    backgroundColor:'rgba(54,162,235,0.3)',
-    borderColor:'blue'
-    }]
+    var titles = new Dictionary<string, string>
+    {
+        {"Extraversion", "Ești o persoană Extrovertită"},
+        {"Openness", "Ești o persoană Deschisă și Creativă"},
+        {"Conscientiousness", "Ești o persoană Organizată"},
+        {"Agreeableness", "Ești o persoană Empatică"},
+        {"Neuroticism", "Ești o persoană Sensibilă Emoțional"}
     };
 
-    new Chart(document.getElementById('radar'),{
-    type:'radar',
-    data:data
-    });
-</script>
+    var descriptions = new Dictionary<string, string>
+    {
+        {"Extraversion", "Îți place să fii înconjurat de oameni și te simți energizat în situații sociale. Ești comunicativ, entuziast și de obicei ești sufletul petrecerii. Preferi să lucrezi în echipă și te plictisești ușor când ești singur prea mult timp. Cariere potrivite: vânzări, management, actorie, jurnalism, PR."},
+        {"Openness", "Ai o minte curioasă și creativă. Îți place să explorezi idei noi, să călătorești, să înveți lucruri diferite și să gândești în afara tiparelor. Ești deschis la schimbare și te adaptezi ușor la situații noi. Uneori poți părea visător, dar tocmai asta te face inovator. Cariere potrivite: artă, design, cercetare, IT, arhitectură."},
+        {"Conscientiousness", "Ești disciplinat, organizat și de încredere. Îți faci întotdeauna treaba la timp și ai standarde înalte pentru tot ceea ce faci. Oamenii din jurul tău știu că se pot baza pe tine. Uneori poți fi perfecționist, ceea ce poate fi atât un avantaj cât și o sursă de stres. Cariere potrivite: contabilitate, medicină, drept, inginerie, management de proiect."},
+        {"Agreeableness", "Ești o persoană caldă, prietenoasă și grijulie față de ceilalți. Pui nevoile altora pe primul loc și eviți conflictele. Ești un bun ascultător și oamenii vin la tine când au probleme. Uneori poți fi prea îngăduitor și este important să înveți să spui și 'nu'. Cariere potrivite: psihologie, medicină, asistență socială, educație, resurse umane."},
+        {"Neuroticism", "Ești o persoană profundă și sensibilă care simte lucrurile foarte intens. Ești atent la detalii și conștient de riscuri, ceea ce te face prudent. Uneori te poți îngrijora mai mult decât e necesar, dar această sensibilitate te face și empatic și creativ. Este important să găsești tehnici de relaxare și să vorbești cu oameni de încredere când te simți copleșit. Cariere potrivite: artă, scriere creativă, consiliere, cercetare."}
+    };
+
+    var tips = new Dictionary<string, string>
+    {
+        {"Extraversion", "💡 Sfat: Încearcă să rezervi și timp pentru tine — momentele de liniște te pot ajuta să te încarci și să reflectezi asupra deciziilor importante."},
+        {"Openness", "💡 Sfat: Creativitatea ta este un dar, dar încearcă să finalizezi proiectele începute înainte de a trece la ceva nou."},
+        {"Conscientiousness", "💡 Sfat: Încearcă să nu fii prea dur cu tine când lucrurile nu merg perfect. Uneori 'bine' este suficient."},
+        {"Agreeableness", "💡 Sfat: A spune 'nu' nu te face o persoană rea. Grijește-te și de propriile nevoi, nu doar de ale altora."},
+        {"Neuroticism", "💡 Sfat: Tehnicile de respirație, meditația sau sportul pot fi de mare ajutor în momentele de anxietate. Nu ezita să ceri sprijin când ai nevoie."}
+    };
+}
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rezultat – Fortune Teller</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-image: url('/images/fortune_orb_1050x700.jpg');
+            background-position: center center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 16px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 5, 30, 0.70);
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 680px;
+            max-width: 95vw;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .result-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .result-name {
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .result-desc {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .tip-box {
+            background: rgba(124, 58, 237, 0.2);
+            border: 1px solid rgba(124, 58, 237, 0.4);
+            border-radius: 12px;
+            padding: 16px 20px;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .scores-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+        }
+
+        .scores-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .score-name {
+            width: 160px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            flex-shrink: 0;
+        }
+
+        .score-best .score-name {
+            color: white;
+            font-weight: 600;
+        }
+
+        .score-bar-bg {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            background: rgba(124, 58, 237, 0.6);
+            border-radius: 4px;
+        }
+
+        .score-best .score-bar-fill {
+            background: rgba(167, 139, 250, 0.9);
+        }
+
+        .score-val {
+            width: 48px;
+            text-align: right;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            flex-shrink: 0;
+        }
+
+        .score-best .score-val {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+        }
+
+        .chart-wrap {
+            max-width: 420px;
+            margin: 0 auto 32px auto;
+        }
+
+        .restart-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: rgba(124, 58, 237, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(124, 58, 237, 0.5);
+            color: white;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+            .restart-btn:hover {
+                background: rgba(91, 33, 182, 0.85);
+                transform: translateY(-2px);
+            }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="result-card">
+
+            <div class="result-label">Tipul tău dominant de personalitate</div>
+            <div class="result-name">@titles[best]</div>
+            <div class="result-desc">@descriptions[best]</div>
+
+            <div class="tip-box">
+                @tips[best]
+            </div>
+
+            <div class="scores-title">Scorurile tale complete</div>
+            <div class="scores-grid">
+                @foreach (var item in Model.OrderByDescending(x => x.Value))
+                {
+                    <div class="score-item @(item.Key == best ? "score-best" : "")">
+                        <div class="score-name">@item.Key</div>
+                        <div class="score-bar-bg">
+                            <div class="score-bar-fill" style="width: @(item.Value * 5)%"></div>
+                        </div>
+                        <div class="score-val">@item.Value / 20</div>
+                    </div>
+                }
+            </div>
+
+            <div class="chart-wrap">
+                <canvas id="radar"></canvas>
+            </div>
+
+            <a href="/Test/Index" class="restart-btn">Reia testul</a>
+
+        </div>
+    </div>
+
+    <script>
+        new Chart(document.getElementById('radar'), {
+            type: 'radar',
+            data: {
+                labels: ['Extraversion', 'Openness', 'Conscientiousness', 'Agreeableness', 'Neuroticism'],
+                datasets: [{
+                    label: 'Scorul tău',
+                    data: [
+                        @Model["Extraversion"],
+                        @Model["Openness"],
+                        @Model["Conscientiousness"],
+                        @Model["Agreeableness"],
+                        @Model["Neuroticism"]
+                    ],
+                    backgroundColor: 'rgba(124, 58, 237, 0.3)',
+                    borderColor: 'rgba(167, 139, 250, 0.9)',
+                    pointBackgroundColor: 'rgba(167, 139, 250, 1)',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        min: 0,
+                        max: 20,
+                        ticks: {
+                            stepSize: 5,
+                            color: 'rgba(255,255,255,0.5)',
+                            backdropColor: 'transparent'
+                        },
+                        grid: {
+                            color: 'rgba(255,255,255,0.15)'
+                        },
+                        angleLines: {
+                            color: 'rgba(255,255,255,0.15)'
+                        },
+                        pointLabels: {
+                            color: 'rgba(255,255,255,0.8)',
+                            font: { size: 13 }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

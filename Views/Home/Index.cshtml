@@ -1,8 +1,153 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    Layout = null;
 }
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fortune Teller</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+        body {
+            min-height: 100vh;
+            background-image: url('/images/fortune_orb_1050x700.jpg');
+            background-position: center center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 5, 30, 0.65);
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 600px;
+            max-width: 95vw;
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+        }
+
+        .title {
+            font-size: 48px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.6;
+            margin-bottom: 48px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .traits {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .trait {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: rgba(255,255,255,0.8);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .start-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: rgba(124, 58, 237, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(124, 58, 237, 0.5);
+            color: white;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+            .start-btn:hover {
+                background: rgba(91, 33, 182, 0.9);
+                transform: translateY(-2px);
+            }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+
+        <div class="icon">🔮</div>
+        <div class="title">Fortune Teller</div>
+        <div class="subtitle">
+            Descoperă tipul tău de personalitate prin 25 de întrebări<br />
+            inspirate din testul psihologic Big Five.
+        </div>
+
+        <div class="card">
+            <div class="card-title">Ce vei descoperi</div>
+            <div class="traits">
+                <div class="trait">🧠 Extraversion</div>
+                <div class="trait">🎨 Openness</div>
+                <div class="trait">📋 Conscientiousness</div>
+                <div class="trait">🤝 Agreeableness</div>
+                <div class="trait" style="grid-column: span 2;">💭 Neuroticism</div>
+            </div>
+        </div>
+
+        <a href="/Test/Index" class="start-btn">Începe testul →</a>
+
+    </div>
+</body>
+</html>

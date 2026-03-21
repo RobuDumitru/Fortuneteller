@@ -1,70 +1,164 @@
 ﻿@{
     Layout = null;
 }
-
-<style>
-    body {
-        background: url('/images/fortune_orb_1050x700.jpg');
-        background-size: cover;
-        background-position: center;
-        font-family: Arial;
-    }
-
-    .card {
-        background: white;
-        padding: 40px;
-        border-radius: 20px;
-        width: 600px;
-        margin: auto;
-        margin-top: 120px;
-        text-align: center;
-        box-shadow: 0 0 30px rgba(0,0,0,0.4);
-    }
-
-    .btn {
-        display: block;
-        margin: 10px;
-        padding: 15px;
-        font-size: 18px;
-        transition: 0.3s;
-        border: none;
-        border-radius: 10px;
-    }
-
-        .btn:hover {
-            transform: scale(1.05);
-            background: #4da6ff;
-            color: white;
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fortune Teller</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-    .progress {
-        height: 20px;
-        background: #ddd;
-        border-radius: 10px;
-        margin-bottom: 20px;
-    }
+        body {
+            min-height: 100vh;
+            background-image: url('/images/fortune_orb_1050x700.jpg');
+            background-position: center center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .progress-bar {
-        height: 100%;
-        background: #4da6ff;
-        width: @ViewBag.Progress %;
-        border-radius: 10px;
-    }
-</style>
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 5, 30, 0.65);
+            z-index: 0;
+        }
 
-<div class="card">
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 640px;
+            max-width: 95vw;
+        }
 
-    <div class="progress">
-        <div class="progress-bar"></div>
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .progress-bar-bg {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: rgba(124, 58, 237, 0.8);
+            border-radius: 4px;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 16px;
+            padding: 36px 40px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .question-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .question-text {
+            font-size: 22px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .option-btn {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 12px;
+            padding: 18px 16px;
+            font-size: 15px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            text-align: center;
+        }
+
+            .option-btn:hover {
+                background: rgba(124, 58, 237, 0.6);
+                border-color: rgba(124, 58, 237, 0.8);
+                color: white;
+                transform: translateY(-2px);
+            }
+
+            .option-btn:active {
+                transform: translateY(0);
+                background: rgba(91, 33, 182, 0.7);
+            }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+
+        <div class="progress-info">
+            <span>Întrebarea @ViewBag.Index din @ViewBag.Total</span>
+            <span>@ViewBag.Progress%</span>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: @(ViewBag.Progress)%"></div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-label">Întrebarea @ViewBag.Index</div>
+            <div class="question-text">@ViewBag.Question</div>
+        </div>
+
+        <div class="options-grid">
+            <form method="post" asp-action="Answer">
+                <button name="value" value="1" class="option-btn">Deloc de acord</button>
+            </form>
+            <form method="post" asp-action="Answer">
+                <button name="value" value="2" class="option-btn">Puțin de acord</button>
+            </form>
+            <form method="post" asp-action="Answer">
+                <button name="value" value="3" class="option-btn">De acord</button>
+            </form>
+            <form method="post" asp-action="Answer">
+                <button name="value" value="4" class="option-btn">Foarte de acord</button>
+            </form>
+        </div>
+
     </div>
-
-    <h2>@ViewBag.Question</h2>
-
-    <form method="post" asp-action="Answer">
-        <button name="value" value="1" class="btn">Deloc</button>
-        <button name="value" value="2" class="btn">Puțin</button>
-        <button name="value" value="3" class="btn">De acord</button>
-        <button name="value" value="4" class="btn">Foarte de acord</button>
-    </form>
-
-</div>
+</body>
+</html>

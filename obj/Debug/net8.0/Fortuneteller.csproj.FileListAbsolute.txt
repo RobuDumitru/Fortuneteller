@@ -31,3 +31,4 @@ D:\_backup_\Desktop\PAPP-221\Fortuneteller\obj\Debug\net8.0\refint\Fortuneteller
 D:\_backup_\Desktop\PAPP-221\Fortuneteller\obj\Debug\net8.0\Fortuneteller.pdb
 D:\_backup_\Desktop\PAPP-221\Fortuneteller\obj\Debug\net8.0\Fortuneteller.genruntimeconfig.cache
 D:\_backup_\Desktop\PAPP-221\Fortuneteller\obj\Debug\net8.0\ref\Fortuneteller.dll
+D:\_backup_\Desktop\PAPP-221\Fortuneteller\obj\Debug\net8.0\Fortuneteller.sourcelink.json

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Fortuneteller")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+414f9ecc942ef98f587d662b4ba9d5f17e186507")]
 [assembly: System.Reflection.AssemblyProductAttribute("Fortuneteller")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Fortuneteller")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
